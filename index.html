@@ -5,76 +5,94 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>La Providence — Elbeuf</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,600;0,700;1,500&family=Archivo:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bungee&family=Archivo:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Space+Mono:wght@400;700&family=Caveat:wght@600;700&display=swap">
 <style>
-/* ============ TOKENS ============
-   One idea, executed with restraint: warm kraft-paper surface, a single
-   navy "trust" band for header/footer/CTA zones, and one warm accent
-   (terracotta) used sparingly for price and links. Two typefaces only. */
+/* ============ TOKENS ============ */
 :root{
-  --kraft:#F3E9D2;
-  --kraft-2:#EADFC1;
-  --paper-line:#D8C79A;
-  --ink:#2A2114;
-  --ink-soft:#6B5C42;
-  --navy:#12293C;
-  --navy-2:#0C1F2E;
-  --cream:#F8F1E0;
-  --cream-soft:#CFC3A4;
-  --terracotta:#B6502F;
-  --terracotta-soft:#D97E5A;
+  /* light (daytime paper menu) */
+  --kraft:#EEE3CC;
+  --kraft-2:#E4D6B4;
+  --paper-line:#C9B182;
+  --ink:#221C11;
+  --ink-soft:#5B4E36;
+  --navy:#16324A;
+  --navy-2:#0F2536;
+  --red:#B23A2E;
+  --gold:#B8862E;
+  --gold-bright:#D9A62E;
   --surface:var(--kraft);
   --surface-2:var(--kraft-2);
   --text:var(--ink);
   --text-soft:var(--ink-soft);
-  --accent:var(--terracotta);
+  --accent:var(--navy);
+  --accent-2:var(--red);
+  --trim:var(--gold);
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --kraft:#1C1811;
-    --kraft-2:#241F16;
+    --kraft:#1B1712;
+    --kraft-2:#241E16;
     --paper-line:#4A4030;
     --ink:#F1E8D4;
     --ink-soft:#C9B990;
-    --navy:#B9CCDA;
-    --navy-2:#9FC2DE;
-    --cream:#F8F1E0;
-    --cream-soft:#CFC3A4;
-    --terracotta:#E38A64;
-    --terracotta-soft:#EDA582;
+    --navy:#9FC2DE;
+    --navy-2:#7FA8C7;
+    --red:#E07A66;
+    --gold:#E3B85E;
+    --gold-bright:#F0CB74;
     --surface:var(--kraft);
     --surface-2:var(--kraft-2);
     --text:var(--ink);
     --text-soft:var(--ink-soft);
-    --accent:var(--terracotta);
+    --accent:var(--navy);
+    --accent-2:var(--red);
+    --trim:var(--gold);
   }
 }
 :root[data-theme="dark"]{
-  --kraft:#1C1811;
-  --kraft-2:#241F16;
+  --kraft:#1B1712;
+  --kraft-2:#241E16;
   --paper-line:#4A4030;
   --ink:#F1E8D4;
   --ink-soft:#C9B990;
-  --navy:#B9CCDA;
-  --navy-2:#9FC2DE;
-  --cream:#F8F1E0;
-  --cream-soft:#CFC3A4;
-  --terracotta:#E38A64;
-  --terracotta-soft:#EDA582;
+  --navy:#9FC2DE;
+  --navy-2:#7FA8C7;
+  --red:#E07A66;
+  --gold:#E3B85E;
+  --gold-bright:#F0CB74;
   --surface:var(--kraft);
   --surface-2:var(--kraft-2);
   --text:var(--ink);
   --text-soft:var(--ink-soft);
-  --accent:var(--terracotta);
+  --accent:var(--navy);
+  --accent-2:var(--red);
+  --trim:var(--gold);
 }
 
-/* The navy band (header, hero, footer) is a fixed dark surface by design —
-   a painted sign above a door, not a UI panel that inverts at night. */
+/* Fixed component tokens for the chalkboard block — a literal object,
+   stays dark in both site themes on purpose. Kept in the same navy
+   family as the signage bands (was a separate near-black green before,
+   which read as a clashing third dark hue against the navy hero/footer). */
 :root{
-  --band-1:#0C1F2E;
-  --band-2:#15334A;
-  --band-cream:#F8F1E0;
-  --band-cream-soft:#CBBFA0;
+  --board-bg:#0D2233;
+  --board-bg-2:#0A1B29;
+  --board-chalk:#EFE9D8;
+  --board-chalk-soft:#A9B8C2;
+}
+
+/* Fixed component tokens for the enamel signage bands (hero, ambiance,
+   footer) — a bolted metal plaque keeps its own colour whatever the
+   viewer's theme is; it does not "invert" at night any more than the
+   chalkboard does. Keeping these off the adaptive --navy/--navy-2
+   tokens is what previously broke: those flip to a pale blue for text
+   contrast in dark mode, which is wrong for a large fill. */
+:root{
+  --signage-1:#0F2536;
+  --signage-2:#17324A;
+  --signage-cream:#FBF6E4;
+  --signage-cream-soft:#D8CFB4;
+  --signage-gold:#D9A62E;
+  --signage-frame:#B8862E;
 }
 
 *{box-sizing:border-box;}
@@ -84,13 +102,15 @@ body{
   background:var(--surface);
   color:var(--text);
   font-family:'Archivo', -apple-system, 'Helvetica Neue', Arial, sans-serif;
-  line-height:1.6;
+  line-height:1.5;
   font-size:16px;
 }
-h1,h2,h3{text-wrap:balance; font-weight:600; margin:0;}
-.wrap{max-width:980px; margin:0 auto; padding:0 28px;}
+h1,h2,h3{text-wrap:balance; font-weight:600;}
+.wrap{max-width:1000px; margin:0 auto; padding:0 28px;}
 a{color:inherit;}
-.serif{font-family:'Fraunces', Georgia, serif;}
+.mono{font-family:'Space Mono', 'Courier New', monospace;}
+.hand{font-family:'Caveat', cursive;}
+.display{font-family:'Bungee', 'Arial Black', sans-serif; font-weight:400;}
 
 @media (prefers-reduced-motion: reduce){
   *{animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important;}
@@ -99,159 +119,268 @@ a{color:inherit;}
 /* ============ NAV ============ */
 nav{
   position:sticky; top:0; z-index:20;
-  background:var(--band-1);
-  border-bottom:1px solid rgba(203,191,160,0.18);
+  background:var(--surface);
+  border-bottom:2px solid var(--accent);
 }
 nav .row{
   display:flex; align-items:center; justify-content:space-between;
-  padding:16px 28px;
+  padding:14px 28px;
 }
-.wordmark{
-  font-family:'Fraunces', Georgia, serif; font-weight:600; font-size:1.15rem;
-  color:var(--band-cream); letter-spacing:0.3px;
+.badge-mark{
+  display:flex; align-items:center; gap:10px;
+}
+.badge-mark .ring{
+  width:34px; height:34px; border-radius:50%;
+  border:2px solid var(--accent);
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Bungee', sans-serif; font-size:0.85rem; color:var(--accent);
+}
+.badge-mark .name{
+  font-family:'Bungee', sans-serif; font-size:0.95rem; letter-spacing:0.5px;
+  color:var(--accent);
 }
 .book-link{
-  font-size:0.85rem; font-weight:600; text-decoration:none;
-  color:var(--band-1); background:var(--terracotta-soft);
-  padding:10px 18px; border-radius:3px;
-  transition:filter .15s;
+  font-family:'Space Mono', monospace; font-size:0.8rem; letter-spacing:1px;
+  text-transform:uppercase; text-decoration:none; color:var(--text);
+  border:1.5px solid var(--trim); padding:9px 16px;
+  transition:background .15s, color .15s;
 }
-.book-link:hover{ filter:brightness(1.08); }
+.book-link:hover{ background:var(--accent-2); color:#fff; border-color:var(--accent-2); }
 
-/* ============ HERO ============ */
+/* ============ HERO (signage band) ============ */
 .hero{
-  background:linear-gradient(175deg, var(--band-2), var(--band-1) 65%);
-  color:var(--band-cream-soft);
-  padding:96px 0 84px;
+  position:relative;
+  background:
+    radial-gradient(circle at 20% 10%, rgba(255,255,255,0.06), transparent 40%),
+    radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1px) 0 0/6px 6px,
+    linear-gradient(180deg, var(--signage-2), var(--signage-1));
+  color:var(--signage-cream-soft);
+  padding:80px 0 130px;
+  overflow:visible;
+  z-index:1;
+  border-top:5px solid var(--signage-frame);
+  border-bottom:5px solid var(--signage-frame);
+}
+.rivet{
+  position:absolute; width:12px; height:12px; border-radius:50%;
+  background:radial-gradient(circle at 35% 30%, #EFD48E, var(--signage-frame) 62%, #6B4D17 100%);
+  box-shadow:inset 0 1px 1px rgba(255,255,255,0.45), 0 1px 2px rgba(0,0,0,0.4);
+}
+.rivet-tl{ top:16px; left:18px; }
+.rivet-tr{ top:16px; right:18px; }
+.hero .stamp-address{
+  position:absolute; top:26px; right:28px;
+  border:1.5px dashed rgba(243,239,225,0.55);
+  color:rgba(243,239,225,0.85);
+  font-family:'Space Mono', monospace; font-size:0.7rem;
+  letter-spacing:1.5px; text-transform:uppercase;
+  padding:8px 12px; transform:rotate(4deg);
 }
 .hero .eyebrow{
-  text-transform:uppercase; letter-spacing:2.5px; font-size:0.75rem;
-  color:var(--terracotta-soft); font-weight:600; margin:0 0 20px;
+  font-family:'Space Mono', monospace; text-transform:uppercase;
+  letter-spacing:4px; font-size:0.72rem; color:var(--signage-gold);
+  margin:0 0 18px;
 }
 .hero h1{
-  font-family:'Fraunces', Georgia, serif; font-weight:600; font-style:italic;
-  font-size:clamp(2.6rem, 6vw, 4.2rem);
-  line-height:1.08; color:var(--band-cream); max-width:14ch; margin:0 0 22px;
+  font-family:'Bungee', 'Arial Black', sans-serif;
+  font-size:clamp(2.6rem, 7vw, 5rem);
+  line-height:1.02; letter-spacing:0.5px; margin:0 0 20px; color:var(--signage-cream);
+  max-width:11ch;
 }
 .hero p.tagline{
-  font-size:1.15rem; line-height:1.55; color:var(--band-cream-soft); max-width:38ch; margin:0 0 34px;
+  font-size:1.1rem; line-height:1.5; color:var(--signage-cream-soft); max-width:34ch; margin:0;
+  font-style:italic;
 }
-.hero .hero-cta{
-  display:inline-flex; align-items:center; gap:14px;
-  background:var(--terracotta); color:var(--band-cream);
-  text-decoration:none; padding:15px 26px; border-radius:3px;
-  font-weight:600; font-size:0.98rem;
-  transition:filter .15s;
+
+.price-sticker{
+  position:absolute; right:28px; bottom:-56px;
+  width:132px; height:132px; border-radius:50%;
+  background:var(--red);
+  border:3px dashed var(--gold-bright);
+  color:#FBF3E6;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  transform:rotate(-9deg);
+  box-shadow:0 14px 26px rgba(0,0,0,0.28);
+  transition:transform .25s ease;
 }
-.hero .hero-cta:hover{ filter:brightness(1.08); }
-.hero .hero-cta .price{ font-family:'Fraunces', serif; font-weight:600; }
+.price-sticker:hover{ transform:rotate(-2deg) scale(1.04); }
+.price-sticker .amt{ font-family:'Bungee', sans-serif; font-size:1.9rem; line-height:1; }
+.price-sticker .lbl{ font-family:'Space Mono', monospace; font-size:0.6rem; letter-spacing:1px; text-transform:uppercase; margin-top:4px; text-align:center;}
 
 /* ============ SECTION GENERIC ============ */
-section{ padding:76px 0; }
-.section-head{ margin-bottom:40px; max-width:52ch; }
+section{ padding:88px 0 64px; }
+.section-head{ margin-bottom:44px; max-width:52ch; }
 .section-head .kicker{
-  text-transform:uppercase; letter-spacing:2.5px; font-size:0.72rem;
-  color:var(--accent); font-weight:600;
+  font-family:'Space Mono', monospace; text-transform:uppercase; letter-spacing:3px;
+  font-size:0.7rem; color:var(--accent-2);
 }
-.section-head h2{
-  font-family:'Fraunces', Georgia, serif; font-weight:600;
-  font-size:1.9rem; margin:10px 0 0; color:var(--text);
-}
+.section-head h2{ font-size:1.9rem; margin:8px 0 0; color:var(--text); }
 
-/* ============ MENU ============ */
+/* ============ CHALKBOARD ============ */
+.chalk-section{
+  background:
+    radial-gradient(circle at 80% 0%, rgba(255,255,255,0.03), transparent 45%),
+    var(--board-bg);
+  padding:70px 0;
+  position:relative;
+}
+.chalk-section::after{ /* chalk dust bottom edge */
+  content:""; position:absolute; left:0; right:0; bottom:0; height:6px;
+  background:repeating-linear-gradient(90deg, rgba(239,233,216,0.12) 0 3px, transparent 3px 9px);
+}
+.chalk-wrap{ max-width:640px; margin:0 auto; padding:0 28px; text-align:center; }
+.chalk-wrap .kicker{
+  font-family:'Space Mono', monospace; letter-spacing:3px; text-transform:uppercase;
+  font-size:0.68rem; color:var(--board-chalk-soft);
+}
+.chalk-wrap h2{
+  font-family:'Caveat', cursive; font-weight:700; font-size:3.1rem;
+  color:var(--board-chalk); margin:10px 0 6px;
+}
+.chalk-underline{ display:block; margin:0 auto 18px; width:220px; height:14px; }
+.chalk-underline path{
+  fill:none; stroke:var(--board-chalk-soft); stroke-width:2.5; stroke-linecap:round;
+  stroke-dasharray:260; stroke-dashoffset:260;
+  animation:draw 1.1s 0.3s ease-out forwards;
+}
+@media (prefers-reduced-motion: reduce){ .chalk-underline path{ animation:none; stroke-dashoffset:0; } }
+@keyframes draw{ to{ stroke-dashoffset:0; } }
+.chalk-wrap p{ color:var(--board-chalk-soft); font-size:1.05rem; line-height:1.5; max-width:42ch; margin-left:auto; margin-right:auto; }
+.chalk-wrap p strong{ color:var(--board-chalk); font-weight:600; }
+
+/* ============ MENU TICKETS ============ */
 .menu-section{ background:var(--surface); }
-.special{
-  background:var(--surface-2); border:1px solid var(--paper-line);
-  border-left:4px solid var(--accent);
-  padding:18px 22px; margin-bottom:36px;
-  display:flex; align-items:baseline; gap:12px; flex-wrap:wrap;
+.tickets{ display:grid; grid-template-columns:repeat(3, 1fr); gap:26px; }
+.ticket{
+  background:var(--surface-2);
+  border:1.5px solid var(--paper-line);
+  padding:26px 22px 22px;
+  position:relative;
 }
-.special .tag{
-  text-transform:uppercase; letter-spacing:1.5px; font-size:0.68rem;
-  font-weight:600; color:var(--accent);
+.ticket::before, .ticket::after{
+  content:""; position:absolute; left:10px; right:10px; height:9px;
+  background-image:
+    linear-gradient(135deg, var(--surface) 6px, transparent 0),
+    linear-gradient(-135deg, var(--surface) 6px, transparent 0);
+  background-position:left top; background-size:12px 12px; background-repeat:repeat-x;
 }
-.special strong{ font-family:'Fraunces', serif; font-size:1.05rem; }
-.special span.desc{ color:var(--text-soft); font-size:0.92rem; }
-
-.courses{ display:grid; grid-template-columns:repeat(3, 1fr); gap:0; border:1px solid var(--paper-line); }
-.course{
-  padding:28px 24px; border-right:1px solid var(--paper-line);
+.ticket::before{ top:-1px; }
+.ticket::after{ bottom:-1px; transform:rotate(180deg); }
+.ticket .no{
+  font-family:'Space Mono', monospace; font-size:0.7rem; color:var(--text-soft);
+  letter-spacing:1px;
 }
-.course:last-child{ border-right:none; }
-.course .step{
-  font-size:0.72rem; text-transform:uppercase; letter-spacing:1.5px; color:var(--text-soft); font-weight:600;
+.ticket h3{
+  font-family:'Bungee', sans-serif; font-size:0.95rem; font-weight:400;
+  margin:10px 0 14px; color:var(--accent);
 }
-.course h3{
-  font-family:'Fraunces', serif; font-weight:600; font-size:1.15rem;
-  margin:8px 0 10px; color:var(--text);
+.ticket .line{
+  display:flex; align-items:baseline; gap:6px;
+  font-size:0.95rem; margin-bottom:6px;
 }
-.course p{ font-size:0.92rem; color:var(--text-soft); margin:0; }
+.ticket .line .dots{
+  flex:1; border-bottom:1.5px dotted var(--paper-line); height:1px; transform:translateY(-4px);
+}
+.ticket .line .status{ font-family:'Space Mono', monospace; font-size:0.72rem; color:var(--accent-2); text-transform:uppercase; }
+.ticket .note{ margin-top:12px; font-size:0.85rem; color:var(--text-soft); font-style:italic; }
 
 .formule-line{
-  margin-top:28px; text-align:center;
-  font-size:0.98rem; color:var(--text-soft);
+  margin-top:38px; display:flex; align-items:center; justify-content:center; gap:14px;
+  font-family:'Space Mono', monospace; font-size:0.85rem; color:var(--text-soft);
 }
-.formule-line strong{ font-family:'Fraunces', serif; color:var(--accent); font-size:1.15rem; }
+.formule-line .amt{ font-family:'Bungee', sans-serif; color:var(--accent-2); font-size:1.1rem; }
 
-/* ============ AMBIANCE ============ */
-.ambiance-section{ background:var(--band-1); color:var(--band-cream-soft); }
-.ambiance-section .section-head .kicker{ color:var(--terracotta-soft); }
-.ambiance-section .section-head h2{ color:var(--band-cream); }
-.features{
-  display:grid; grid-template-columns:repeat(4, 1fr); gap:28px;
+/* ============ AMBIANCE — medallions ============ */
+.ambiance-section{
+  position:relative;
+  background:
+    radial-gradient(rgba(255,255,255,0.045) 1px, transparent 1px) 0 0/6px 6px,
+    linear-gradient(180deg, var(--signage-2), var(--signage-1));
+  color:var(--signage-cream-soft);
+  border-top:5px solid var(--signage-frame);
+  border-bottom:5px solid var(--signage-frame);
 }
-.feature{ text-align:left; }
-.feature .icn{
-  width:38px; height:38px; margin-bottom:14px;
+.ambiance-section .section-head .kicker{ color:var(--signage-gold); }
+.ambiance-section .section-head h2{ color:var(--signage-cream); }
+.medallions{
+  display:grid; grid-template-columns:repeat(4, 1fr); gap:22px;
 }
-.feature .icn svg{ width:100%; height:100%; stroke:var(--terracotta-soft); fill:none; stroke-width:1.6; }
-.feature p{ font-size:0.92rem; color:var(--band-cream-soft); margin:0; }
+.medallion{ text-align:center; }
+.medallion .ring{
+  width:76px; height:76px; border-radius:50%;
+  border:2px solid var(--signage-gold);
+  display:flex; align-items:center; justify-content:center;
+  margin:0 auto 14px;
+  background:rgba(251,246,230,0.04);
+}
+.medallion svg{ width:32px; height:32px; stroke:var(--signage-cream); fill:none; stroke-width:1.6; }
+.medallion p{ font-size:0.88rem; color:var(--signage-cream-soft); margin:0; }
 
-/* ============ INFOS ============ */
+/* ============ INFOS — receipt ============ */
 .infos-section{ background:var(--surface); }
-.infos-grid{ display:grid; grid-template-columns:1.1fr 1fr; gap:48px; align-items:start; }
-.infos-grid .col h3{
-  font-family:'Fraunces', serif; font-weight:600; font-size:1rem; margin:0 0 16px; color:var(--text);
+.receipt{
+  max-width:420px; margin:0 auto;
+  background:var(--surface-2);
+  position:relative;
+  padding:34px 30px 26px;
 }
-.infos-grid .row{
+.receipt::before, .receipt::after{
+  content:""; position:absolute; left:8px; right:8px; height:11px;
+  background-image:
+    linear-gradient(135deg, var(--surface) 7px, transparent 0),
+    linear-gradient(-135deg, var(--surface) 7px, transparent 0);
+  background-position:left top; background-size:14px 14px; background-repeat:repeat-x;
+}
+.receipt::before{ top:-1px; }
+.receipt::after{ bottom:-1px; transform:rotate(180deg); }
+.receipt h3{
+  text-align:center; font-family:'Bungee', sans-serif; font-size:0.85rem;
+  color:var(--accent); margin:0 0 18px; letter-spacing:0.5px;
+}
+.receipt .row{
   display:flex; justify-content:space-between; gap:12px;
-  font-size:0.94rem; padding:10px 0; border-bottom:1px solid var(--paper-line);
+  font-family:'Space Mono', monospace; font-size:0.85rem;
+  padding:6px 0; border-bottom:1px dashed var(--paper-line);
 }
-.infos-grid .row:last-of-type{ border-bottom:none; }
-.infos-grid .row .k{ color:var(--text-soft); }
-.infos-grid .row .v{ text-align:right; }
-.infos-cta{
-  display:inline-block; margin-top:22px;
-  text-decoration:none; color:#fff; background:var(--accent);
-  padding:14px 26px; border-radius:3px; font-weight:600; font-size:0.95rem;
-  transition:filter .15s;
+.receipt .row:last-of-type{ border-bottom:none; }
+.receipt .row .k{ color:var(--text-soft); }
+.receipt .row .v{ text-align:right; font-variant-numeric:tabular-nums; }
+.receipt .thanks{
+  text-align:center; margin-top:20px; font-family:'Caveat', cursive; font-size:1.3rem;
+  color:var(--accent-2);
 }
-.infos-cta:hover{ filter:brightness(1.08); }
+.receipt-cta{
+  display:block; text-align:center; margin:22px auto 0; width:fit-content;
+  font-family:'Space Mono', monospace; font-size:0.8rem; letter-spacing:1.5px;
+  text-transform:uppercase; text-decoration:none; color:var(--accent-2);
+  border:1.5px solid var(--accent-2); padding:11px 24px;
+  transition:background .15s, color .15s;
+}
+.receipt-cta:hover{ background:var(--accent-2); color:#fff; }
 
 /* ============ FOOTER ============ */
 footer{
-  background:var(--band-1); color:var(--band-cream-soft);
-  padding:48px 28px 36px;
-  border-top:1px solid rgba(203,191,160,0.18);
+  background:var(--signage-1); color:var(--signage-cream-soft); text-align:center; padding:56px 28px 40px;
+  position:relative;
+  border-top:5px solid var(--signage-frame);
 }
-footer .foot-wrap{
-  max-width:980px; margin:0 auto;
-  display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:20px;
+footer .name{ font-family:'Bungee', sans-serif; color:var(--signage-cream); font-size:1rem; }
+footer .addr{ font-size:0.85rem; margin-top:8px; line-height:1.5; }
+.specimen-stamp{
+  display:inline-block; margin-top:26px;
+  border:2px solid rgba(224,122,102,0.75); color:rgba(224,122,102,0.9);
+  font-family:'Space Mono', monospace; font-size:0.68rem; letter-spacing:2px;
+  text-transform:uppercase; padding:8px 14px; transform:rotate(-3deg);
 }
-footer .name{ font-family:'Fraunces', serif; font-weight:600; color:var(--band-cream); font-size:1.05rem; }
-footer .addr{ font-size:0.85rem; margin-top:8px; line-height:1.5; color:var(--band-cream-soft); }
-footer .note{
-  font-size:0.78rem; color:var(--band-cream-soft); opacity:0.75; max-width:34ch; text-align:right;
-}
+.specimen-stamp span{ display:block; font-size:0.6rem; margin-top:3px; letter-spacing:1px; opacity:0.85;}
 
 @media (max-width:760px){
-  .courses{ grid-template-columns:1fr; }
-  .course{ border-right:none; border-bottom:1px solid var(--paper-line); }
-  .course:last-child{ border-bottom:none; }
-  .features{ grid-template-columns:repeat(2, 1fr); }
-  .infos-grid{ grid-template-columns:1fr; gap:36px; }
-  footer .foot-wrap{ flex-direction:column; align-items:flex-start; }
-  footer .note{ text-align:left; }
+  .tickets{ grid-template-columns:1fr; }
+  .medallions{ grid-template-columns:repeat(2, 1fr); }
+  .price-sticker{ right:20px; bottom:-46px; width:104px; height:104px; }
+  .price-sticker .amt{ font-size:1.5rem; }
+  .hero{ padding:64px 0 110px; }
+  .hero h1{ max-width:9ch; }
 }
 </style>
 </head>
@@ -259,55 +388,68 @@ footer .note{
 
 <nav>
   <div class="row">
-    <div class="wordmark">La Providence</div>
+    <div class="badge-mark">
+      <div class="ring">LP</div>
+      <div class="name">LA&nbsp;PROVIDENCE</div>
+    </div>
     <a class="book-link" href="#contact">Réserver</a>
   </div>
 </nav>
 
 <header class="hero">
+  <div class="rivet rivet-tl"></div>
+  <div class="rivet rivet-tr"></div>
   <div class="wrap">
-    <p class="eyebrow">Cuisine traditionnelle · Elbeuf</p>
-    <h1>Une cantine de quartier où l'on mange bien</h1>
-    <p class="tagline">Sans façon, avec de vraies portions et un accueil qui ne change pas depuis toujours.</p>
-    <a class="hero-cta" href="#contact">
-      <span>Voir la formule du midi</span>
-      <span class="price serif">14€</span>
-    </a>
+    <div class="stamp-address">Elbeuf · 76500</div>
+    <p class="eyebrow">Cuisine traditionnelle — depuis toujours au quartier</p>
+    <h1>La<br>Providence</h1>
+    <p class="tagline">Une cantine de quartier où l'on mange bien, sans façon — portions généreuses et accueil qui ne change pas.</p>
+  </div>
+  <div class="price-sticker">
+    <div class="amt mono">14€</div>
+    <div class="lbl">Formule<br>du midi</div>
   </div>
 </header>
+
+<section class="chalk-section">
+  <div class="chalk-wrap">
+    <p class="kicker">Suggestion du jour</p>
+    <h2>Merguez, frites maison</h2>
+    <svg class="chalk-underline" viewBox="0 0 220 14"><path d="M4 8 C 40 2, 80 12, 120 6 S 190 2, 216 8"/></svg>
+    <p>Buffet d'entrées <strong>à volonté</strong>, plat généreux, et mousse au chocolat maison pour finir. Le tout dans la formule à 14€.</p>
+  </div>
+</section>
 
 <section class="menu-section">
   <div class="wrap">
     <div class="section-head">
-      <p class="kicker">La formule du midi</p>
-      <h2>Entrée, plat, dessert — 14€</h2>
+      <p class="kicker">La formule</p>
+      <h2>Ce qui est inclus</h2>
     </div>
-
-    <div class="special">
-      <span class="tag">Suggestion du jour</span>
-      <strong>Merguez, frites maison</strong>
-      <span class="desc">— buffet d'entrées à volonté et mousse au chocolat maison pour finir</span>
-    </div>
-
-    <div class="courses">
-      <div class="course">
-        <div class="step">N°1</div>
+    <div class="tickets">
+      <div class="ticket">
+        <div class="no mono">N°1</div>
         <h3>Entrée</h3>
-        <p>Buffet à volonté, à composer soi-même selon le choix du jour.</p>
+        <div class="line"><span>Buffet à volonté</span><span class="dots"></span></div>
+        <div class="line"><span class="status">Inclus</span></div>
+        <p class="note">À composer soi-même, choix du jour</p>
       </div>
-      <div class="course">
-        <div class="step">N°2</div>
+      <div class="ticket">
+        <div class="no mono">N°2</div>
         <h3>Plat</h3>
-        <p>Merguez maison et frites — portion généreuse, cuisine traditionnelle.</p>
+        <div class="line"><span>Merguez maison, frites</span><span class="dots"></span></div>
+        <div class="line"><span class="status">Inclus</span></div>
+        <p class="note">Portion généreuse, cuisine traditionnelle</p>
       </div>
-      <div class="course">
-        <div class="step">N°3</div>
+      <div class="ticket">
+        <div class="no mono">N°3</div>
         <h3>Dessert</h3>
-        <p>Mousse au chocolat faite maison, la touche gourmande.</p>
+        <div class="line"><span>Mousse au chocolat</span><span class="dots"></span></div>
+        <div class="line"><span class="status">Inclus</span></div>
+        <p class="note">Faite maison, la touche gourmande</p>
       </div>
     </div>
-
-    <p class="formule-line">Formule complète <strong>14€</strong> midi en semaine</p>
+    <p class="formule-line">Entrée + Plat + Dessert <span class="amt">14€</span> midi en semaine</p>
   </div>
 </section>
 
@@ -317,21 +459,21 @@ footer .note{
       <p class="kicker">L'adresse</p>
       <h2>Ce qu'on y trouve</h2>
     </div>
-    <div class="features">
-      <div class="feature">
-        <div class="icn"><svg viewBox="0 0 24 24"><path d="M12 3v9M8 8c0 2.2 1.8 4 4 4s4-1.8 4-4M7 21h10M12 12v9"/></svg></div>
+    <div class="medallions">
+      <div class="medallion">
+        <div class="ring"><svg viewBox="0 0 24 24"><path d="M12 3v9M8 8c0 2.2 1.8 4 4 4s4-1.8 4-4M7 21h10M12 12v9"/></svg></div>
         <p>Cour intérieure</p>
       </div>
-      <div class="feature">
-        <div class="icn"><svg viewBox="0 0 24 24"><circle cx="8" cy="8" r="2.4"/><circle cx="16" cy="8" r="2.4"/><path d="M3 20c0-3 2.5-5 5-5s5 2 5 5M11 20c0-3 2.5-5 5-5s5 2 5 5"/></svg></div>
+      <div class="medallion">
+        <div class="ring"><svg viewBox="0 0 24 24"><circle cx="8" cy="8" r="2.4"/><circle cx="16" cy="8" r="2.4"/><path d="M3 20c0-3 2.5-5 5-5s5 2 5 5M11 20c0-3 2.5-5 5-5s5 2 5 5"/></svg></div>
         <p>Adresse familiale</p>
       </div>
-      <div class="feature">
-        <div class="icn"><svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.6"/><path d="M12 8v6M12 14l-4 6M12 14l4 6M8 11h8"/><circle cx="6" cy="19" r="2.4"/></svg></div>
+      <div class="medallion">
+        <div class="ring"><svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.6"/><path d="M12 8v6M12 14l-4 6M12 14l4 6M8 11h8"/><circle cx="6" cy="19" r="2.4"/></svg></div>
         <p>Accès PMR</p>
       </div>
-      <div class="feature">
-        <div class="icn"><svg viewBox="0 0 24 24"><path d="M7 3h10l-1 8a4 4 0 0 1-8 0L7 3zM12 15v6M8 21h8"/></svg></div>
+      <div class="medallion">
+        <div class="ring"><svg viewBox="0 0 24 24"><path d="M7 3h10l-1 8a4 4 0 0 1-8 0L7 3zM12 15v6M8 21h8"/></svg></div>
         <p>Carte de boissons</p>
       </div>
     </div>
@@ -340,35 +482,27 @@ footer .note{
 
 <section class="infos-section" id="contact">
   <div class="wrap">
-    <div class="section-head">
+    <div class="section-head" style="text-align:center; max-width:none; margin-left:auto; margin-right:auto;">
       <p class="kicker">Infos pratiques</p>
       <h2>On vous attend</h2>
     </div>
-    <div class="infos-grid">
-      <div class="col">
-        <h3>Adresse</h3>
-        <div class="row"><span class="k">Rue</span><span class="v">15 Rue Camille Randoing</span></div>
-        <div class="row"><span class="k">Ville</span><span class="v">76500 Elbeuf</span></div>
-      </div>
-      <div class="col">
-        <h3>Horaires</h3>
-        <div class="row"><span class="k">Lun–Ven</span><span class="v">13h30–16h · 21h–00h</span></div>
-        <div class="row"><span class="k">Samedi</span><span class="v">21h–00h</span></div>
-        <div class="row"><span class="k">Dimanche</span><span class="v">Fermé</span></div>
-      </div>
+    <div class="receipt">
+      <h3>LA PROVIDENCE — ELBEUF</h3>
+      <div class="row"><span class="k">Adresse</span><span class="v">15 Rue Camille Randoing</span></div>
+      <div class="row"><span class="k">Code postal</span><span class="v">76500 Elbeuf</span></div>
+      <div class="row"><span class="k">Lun–Ven</span><span class="v">13h30–16h · 21h–00h</span></div>
+      <div class="row"><span class="k">Samedi</span><span class="v">21h–00h</span></div>
+      <div class="row"><span class="k">Dimanche</span><span class="v">Fermé</span></div>
+      <p class="thanks">réservation conseillée</p>
+      <a class="receipt-cta" href="#">Réserver une table</a>
     </div>
-    <a class="infos-cta" href="#">Réserver une table</a>
   </div>
 </section>
 
 <footer>
-  <div class="foot-wrap">
-    <div>
-      <div class="name">La Providence</div>
-      <div class="addr">15 Rue Camille Randoing, 76500 Elbeuf</div>
-    </div>
-    <p class="note">Proposition de site à titre de démo — non affiliée à l'établissement.</p>
-  </div>
+  <div class="name">LA PROVIDENCE</div>
+  <div class="addr">15 Rue Camille Randoing, 76500 Elbeuf</div>
+  <div class="specimen-stamp">Spécimen — projet de site<span>proposition non affiliée à l'établissement</span></div>
 </footer>
 
 </body>
